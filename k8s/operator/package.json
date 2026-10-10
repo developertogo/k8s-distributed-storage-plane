@@ -1,0 +1,16 @@
+{
+  "name": "k8s-storage-operator",
+  "version": "1.0.0",
+  "description": "Kubernetes Custom Controller for DistributedStorageCluster and StorageVolumeClaim CRDs",
+  "main": "controller.js",
+  "scripts": {
+    "start": "node controller.js",
+    "dev": "node controller.js",
+    "test": "node --test ../../server/test/operator.test.js"
+  },
+  "dependencies": {
+    "@kubernetes/client-node": "^0.20.0",
+    "async": "^3.2.5",
+    "dotenv": "^16.4.5"
+  }
+}

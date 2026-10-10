@@ -1,0 +1,25 @@
+# Kind 3-Node Cluster Configuration for Colima (macOS Apple Silicon M3 / arm64)
+# Features 1 Control-Plane + 2 Worker Nodes with NVMe storage labels
+
+kind: Cluster
+apiVersion: kind.x-k8s.io/v1alpha4
+name: storage-plane
+nodes:
+  - role: control-plane
+    labels:
+      node-role.kubernetes.io/control-plane: ""
+      tier: control-plane
+
+  - role: worker
+    labels:
+      node-role.kubernetes.io/worker: worker
+      storage-tier: direct-nvme
+      topology.kubernetes.io/zone: dgx-zone-a
+      storage.dgx.nvidia.com/node-id: dgx-node-01
+
+  - role: worker
+    labels:
+      node-role.kubernetes.io/worker: worker
+      storage-tier: direct-nvme
+      topology.kubernetes.io/zone: dgx-zone-b
+      storage.dgx.nvidia.com/node-id: dgx-node-02

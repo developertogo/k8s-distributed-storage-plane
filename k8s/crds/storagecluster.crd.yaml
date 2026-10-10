@@ -1,0 +1,113 @@
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  name: distributedstorageclusters.storage.dgx.nvidia.com
+spec:
+  group: storage.dgx.nvidia.com
+  names:
+    kind: DistributedStorageCluster
+    listKind: DistributedStorageClusterList
+    plural: distributedstorageclusters
+    singular: distributedstoragecluster
+    shortNames:
+      - dsc
+      - stcluster
+  scope: Namespaced
+  versions:
+    - name: v1alpha1
+      served: true
+      storage: true
+      schema:
+        openAPIV3Schema:
+          type: object
+          properties:
+            spec:
+              type: object
+              required:
+                - replicas
+                - storagePools
+              properties:
+                replicas:
+                  type: integer
+                  minimum: 1
+                  maximum: 64
+                  description: "Number of storage worker nodes in the cluster"
+                performanceTier:
+                  type: string
+                  enum: ["direct-nvme", "standard-ssd", "hybrid-tiered"]
+                  default: "direct-nvme"
+                  description: "Storage tier classification"
+                networkFabric:
+                  type: string
+                  enum: ["RoCE-v2", "InfiniBand-NDR", "TCP-PCIe"]
+                  default: "RoCE-v2"
+                  description: "High-speed network interconnect protocol"
+                storagePools:
+                  type: array
+                  items:
+                    type: object
+                    required:
+                      - name
+                      - capacityTB
+                      - type
+                    properties:
+                      name:
+                        type: string
+                      type:
+                        type: string
+                        enum: ["nvme-direct", "ssd-shared"]
+                      capacityTB:
+                        type: number
+                      iopsTarget:
+                        type: integer
+                      bandwidthTargetGBps:
+                        type: number
+            status:
+              type: object
+              properties:
+                state:
+                  type: string
+                  enum: ["Initializing", "Healthy", "Degraded", "Reconciling"]
+                activeNodes:
+                  type: integer
+                totalCapacityGB:
+                  type: number
+                allocatedCapacityGB:
+                  type: number
+                utilizationRatio:
+                  type: number
+                throughputGBps:
+                  type: number
+                p99LatencyUs:
+                  type: number
+                lastReconciledAt:
+                  type: string
+                  format: date-time
+                conditions:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      status:
+                        type: string
+                      lastTransitionTime:
+                        type: string
+                      message:
+                        type: string
+      subresources:
+        status: {}
+      additionalPrinterColumns:
+        - name: Status
+          type: string
+          jsonPath: .status.state
+        - name: Nodes
+          type: integer
+          jsonPath: .status.activeNodes
+        - name: Allocated_GB
+          type: number
+          jsonPath: .status.allocatedCapacityGB
+        - name: P99_Latency_us
+          type: number
+          jsonPath: .status.p99LatencyUs

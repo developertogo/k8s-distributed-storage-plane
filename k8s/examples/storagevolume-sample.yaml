@@ -1,0 +1,25 @@
+apiVersion: storage.dgx.nvidia.com/v1alpha1
+kind: StorageVolumeClaim
+metadata:
+  name: pytorch-checkpoint-claim
+  namespace: default
+spec:
+  sizeGB: 2000
+  accessMode: ReadWriteOnce
+  storagePool: nvme-direct-pool
+  directStorageEnabled: true
+  targetNode: storage-plane-worker
+  mountPath: /mnt/dgx-checkpoints
+---
+apiVersion: storage.dgx.nvidia.com/v1alpha1
+kind: StorageVolumeClaim
+metadata:
+  name: dataset-imagenet-cache
+  namespace: default
+spec:
+  sizeGB: 8000
+  accessMode: ReadOnlyMany
+  storagePool: ssd-shared-pool
+  directStorageEnabled: false
+  targetNode: storage-plane-worker2
+  mountPath: /mnt/dgx-imagenet

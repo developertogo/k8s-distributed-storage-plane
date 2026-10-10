@@ -1,0 +1,20 @@
+apiVersion: storage.dgx.nvidia.com/v1alpha1
+kind: DistributedStorageCluster
+metadata:
+  name: dgx-storage-cluster-prod
+  namespace: default
+spec:
+  replicas: 3
+  performanceTier: direct-nvme
+  networkFabric: RoCE-v2
+  storagePools:
+    - name: nvme-direct-pool
+      type: nvme-direct
+      capacityTB: 120
+      iopsTarget: 1500000
+      bandwidthTargetGBps: 64.0
+    - name: ssd-shared-pool
+      type: ssd-shared
+      capacityTB: 500
+      iopsTarget: 400000
+      bandwidthTargetGBps: 25.0

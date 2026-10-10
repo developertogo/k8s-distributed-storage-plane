@@ -1,0 +1,90 @@
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  name: storagevolumeclaims.storage.dgx.nvidia.com
+spec:
+  group: storage.dgx.nvidia.com
+  names:
+    kind: StorageVolumeClaim
+    listKind: StorageVolumeClaimList
+    plural: storagevolumeclaims
+    singular: storagevolumeclaim
+    shortNames:
+      - svc
+      - stvol
+  scope: Namespaced
+  versions:
+    - name: v1alpha1
+      served: true
+      storage: true
+      schema:
+        openAPIV3Schema:
+          type: object
+          properties:
+            spec:
+              type: object
+              required:
+                - sizeGB
+                - accessMode
+                - storagePool
+              properties:
+                sizeGB:
+                  type: integer
+                  minimum: 1
+                  description: "Requested volume size in Gigabytes"
+                accessMode:
+                  type: string
+                  enum: ["ReadWriteOnce", "ReadOnlyMany", "ReadWriteMany"]
+                  default: "ReadWriteOnce"
+                storagePool:
+                  type: string
+                  description: "Target pool: nvme-direct-pool or ssd-shared-pool"
+                directStorageEnabled:
+                  type: boolean
+                  default: true
+                  description: "Enable direct GPU/accelerator bypass attachment"
+                targetNode:
+                  type: string
+                  description: "Assigned compute worker node for volume attachment"
+                mountPath:
+                  type: string
+                  default: "/mnt/dgx-data"
+            status:
+              type: object
+              properties:
+                phase:
+                  type: string
+                  enum: ["Pending", "Bound", "Attaching", "Attached", "Failed", "Detached"]
+                volumeHandle:
+                  type: string
+                attachedNode:
+                  type: string
+                actualSizeGB:
+                  type: integer
+                effectiveBandwidthGBps:
+                  type: number
+                iopsLimit:
+                  type: integer
+                latencyTargetUs:
+                  type: number
+                lastTransitionTime:
+                  type: string
+                  format: date-time
+      subresources:
+        status: {}
+      additionalPrinterColumns:
+        - name: Phase
+          type: string
+          jsonPath: .status.phase
+        - name: Size_GB
+          type: integer
+          jsonPath: .spec.sizeGB
+        - name: DirectStorage
+          type: boolean
+          jsonPath: .spec.directStorageEnabled
+        - name: Node
+          type: string
+          jsonPath: .status.attachedNode
+        - name: VolumeHandle
+          type: string
+          jsonPath: .status.volumeHandle

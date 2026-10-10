@@ -1,0 +1,212 @@
+:root {
+  --bg-main: #0b0e14;
+  --bg-card: #151922;
+  --bg-surface: #1e2430;
+  --border-color: #272f3d;
+  --nvidia-green: #76b900;
+  --nvidia-green-glow: rgba(118, 185, 0, 0.25);
+  --cyan-accent: #00b4d8;
+  --amber-alert: #ffb703;
+  --red-error: #ef233c;
+  --text-primary: #f0f6fc;
+  --text-muted: #8b949e;
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: 'JetBrains Mono', monospace, Consolas;
+}
+
+body {
+  background-color: var(--bg-main) !important;
+  color: var(--text-primary) !important;
+  font-family: var(--font-sans);
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+}
+
+code, pre {
+  font-family: var(--font-mono);
+}
+
+/* Glass & Card styling */
+.storage-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.35);
+  transition: transform 0.2s ease, border-color 0.2s ease;
+}
+
+.storage-card:hover {
+  border-color: #3b4759;
+}
+
+.storage-header {
+  border-bottom: 1px solid var(--border-color);
+  padding: 12px 18px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* Status Badges */
+.badge-nvidia {
+  background-color: var(--nvidia-green);
+  color: #000;
+  font-weight: 600;
+  box-shadow: 0 0 10px var(--nvidia-green-glow);
+}
+
+.badge-demo {
+  background-color: #6366f1;
+  color: #fff;
+  font-weight: 600;
+}
+
+.badge-live {
+  background-color: var(--nvidia-green);
+  color: #000;
+  font-weight: 600;
+  animation: pulse-badge 2s infinite;
+}
+
+@keyframes pulse-badge {
+  0% { box-shadow: 0 0 0 0 rgba(118, 185, 0, 0.7); }
+  70% { box-shadow: 0 0 0 8px rgba(118, 185, 0, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(118, 185, 0, 0); }
+}
+
+/* Stat Counters */
+.stat-value {
+  font-size: 1.85rem;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+  color: var(--text-primary);
+}
+
+.stat-unit {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  margin-left: 4px;
+}
+
+.stat-label {
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text-muted);
+  margin-bottom: 4px;
+}
+
+/* C3 Chart Overrides for Dark Mode */
+.c3 text {
+  fill: #8b949e !important;
+  font-family: var(--font-mono) !important;
+  font-size: 11px;
+}
+
+.c3-axis path, .c3-axis line {
+  stroke: #272f3d !important;
+}
+
+.c3-grid line {
+  stroke: #1e2430 !important;
+}
+
+.c3-tooltip {
+  background-color: #1e2430 !important;
+  border: 1px solid #3b4759 !important;
+  color: #fff !important;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.5) !important;
+  border-radius: 6px;
+}
+
+.c3-tooltip th {
+  background-color: #151922 !important;
+  border-bottom: 1px solid #272f3d !important;
+  color: #f0f6fc !important;
+  font-size: 11px;
+}
+
+.c3-tooltip td {
+  font-size: 11px;
+  border-bottom: 1px solid #272f3d !important;
+}
+
+/* Terminal / Log Box */
+.terminal-window {
+  background-color: #0d1117;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  padding: 12px;
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  max-height: 260px;
+  overflow-y: auto;
+}
+
+.log-entry {
+  padding: 3px 0;
+  line-height: 1.4;
+}
+
+.log-time {
+  color: var(--text-muted);
+  margin-right: 8px;
+}
+
+.log-reconcile {
+  color: var(--nvidia-green);
+}
+
+.log-burst {
+  color: var(--amber-alert);
+}
+
+.log-csi {
+  color: var(--cyan-accent);
+}
+
+/* Table Dark Styling */
+.table-dark-custom {
+  --bs-table-bg: transparent;
+  color: var(--text-primary);
+  border-color: var(--border-color);
+}
+
+.table-dark-custom th {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  color: var(--text-muted);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.table-dark-custom td {
+  border-bottom: 1px solid var(--border-color);
+  vertical-align: middle;
+  font-size: 0.875rem;
+}
+
+/* Buttons */
+.btn-nvidia {
+  background-color: var(--nvidia-green);
+  color: #000;
+  font-weight: 600;
+  border: none;
+}
+
+.btn-nvidia:hover {
+  background-color: #88d400;
+  color: #000;
+}
+
+.btn-nvidia-outline {
+  border: 1px solid var(--nvidia-green);
+  color: var(--nvidia-green);
+  background: transparent;
+}
+
+.btn-nvidia-outline:hover {
+  background-color: var(--nvidia-green);
+  color: #000;
+}
