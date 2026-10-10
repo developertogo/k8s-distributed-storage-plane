@@ -62,6 +62,13 @@
 
 ---
 
+## Project Documentation & Deep Dives
+
+* 🏛️ **[Architecture Guide](docs/ARCHITECTURE.md)** — Comprehensive technical deep dive covering Kubernetes Operators, CSI gRPC architecture, Kafka telemetry streaming pipeline, storage performance formulas, and C3.js data visualization suite.
+* 📖 **[System Documentation & Manual](docs/DOCUMENTATION.md)** — Complete operational and implementation guide covering declarative CRDs, async orchestration engine, benchmark tooling, and multi-node cluster verification.
+
+---
+
 ## Storage Performance Calculations (Python Notation)
 
 ```python
@@ -241,10 +248,3 @@ python3 scripts/test_scripts.py
 # Client component & mock tests
 cd client && npm test -- --watchAll=false
 ```
-
----
-
-## Project Documentation & Deep Dives
-
-* 🏛️ **[Architecture Guide](docs/ARCHITECTURE.md)** — Comprehensive technical deep dive covering Kubernetes Operators, CSI gRPC architecture, Kafka telemetry streaming pipeline, storage performance formulas, and C3.js data visualization suite.
-* 📖 **[System Documentation & Manual](docs/DOCUMENTATION.md)** — Complete operational and implementation guide covering declarative CRDs, async orchestration engine, benchmark tooling, and multi-node cluster verification.
