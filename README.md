@@ -9,7 +9,7 @@
 [![C3.js](https://img.shields.io/badge/Charts-C3.js%20(c3j)-orange.svg)](https://c3js.org/)
 [![Bootstrap](https://img.shields.io/badge/UI-Bootstrap%205-7952b3.svg)](https://getbootstrap.com/)
 [![macOS M3](https://img.shields.io/badge/Platform-macOS%20M3%20%28ARM64%29-blue.svg)](#macos-m3-24gb-emulation--demo-recording)
-[![Demo](https://img.shields.io/badge/GitHub%20Pages-Interactive%20Demo-brightgreen.svg)](#interactive-github-pages-demo)
+[![Swagger](https://img.shields.io/badge/OpenAPI%203.0-Swagger%20UI-85ea2d.svg)](https://developertogo.github.io/k8s-distributed-storage-plane/api-docs)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
 
 ---
@@ -20,9 +20,11 @@
 
 ---
 
-## Live Management Dashboard
+## Live Management Dashboard & Interactive API Docs
 
-> **Interactive Web Demo:** [https://developertogo.github.io/k8s-distributed-storage-plane/](https://developertogo.github.io/k8s-distributed-storage-plane/)
+* 🌐 **Interactive Web Demo:** [https://developertogo.github.io/k8s-distributed-storage-plane/](https://developertogo.github.io/k8s-distributed-storage-plane/)
+* 📜 **Interactive Swagger / OpenAPI Documentation:** [https://developertogo.github.io/k8s-distributed-storage-plane/api-docs](https://developertogo.github.io/k8s-distributed-storage-plane/api-docs)
+  *(Also accessible locally at `http://localhost:5000/api-docs` when running the backend API).*
 
 ![Storage Plane Live Management Dashboard](assets/dashboard-demo.gif)
 
@@ -185,12 +187,14 @@ Access at `http://localhost:3000` with 4 live C3.js streaming charts, interactiv
 * **`🔄 Reconcile CRDs`**: Triggers a manual health verification pass in the Kubernetes Operator log terminal.
 
 #### 2. Backend API & Telemetry WebSocket Hub
-
 ```bash
 cd server
 npm install
 npm start
 ```
+* **API Gateway Port:** `http://localhost:5000` (WebSocket Hub on `ws://localhost:5001`)
+* **Interactive Swagger UI:** `http://localhost:5000/api-docs`
+* **Raw OpenAPI 3.0 Spec:** `http://localhost:5000/api-docs/swagger.json` (or view statically in [`docs/openapi.yaml`](docs/openapi.yaml))
 
 #### 3. Kubernetes Multi-Node Cluster (Colima + Kind on macOS M3)
 
