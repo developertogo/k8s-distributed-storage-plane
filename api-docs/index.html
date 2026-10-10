@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>DGX Storage Plane - Interactive Swagger / OpenAPI</title>
+  <link rel="stylesheet" type="text/css" href="https://unpkg.com/swagger-ui-dist@5.11.0/swagger-ui.css" />
+  <style>
+    html { box-sizing: border-box; overflow: -moz-scrollbars-vertical; overflow-y: scroll; }
+    *, *:before, *:after { box-sizing: inherit; }
+    body { margin:0; background: #0d1117; color: #c9d1d9; }
+    .topbar { display: none !important; }
+    .swagger-ui .info { margin: 25px 0; }
+    .swagger-ui .info .title { font-size: 28px; color: #76b900 !important; }
+    .swagger-ui .scheme-container { background: #161b22; box-shadow: none; border-bottom: 1px solid #30363d; }
+    .swagger-ui { color: #c9d1d9; }
+    .swagger-ui .opblock .opblock-summary-operation-id, .swagger-ui .opblock .opblock-summary-path, .swagger-ui .opblock .opblock-summary-path__deprecated { color: #f0f6fc; }
+    .swagger-ui .opblock-description-wrapper p, .swagger-ui .opblock-external-docs-wrapper p, .swagger-ui .opblock-title_normal p { color: #8b949e; }
+  </style>
+</head>
+<body>
+  <div id="swagger-ui"></div>
+  <script src="https://unpkg.com/swagger-ui-dist@5.11.0/swagger-ui-bundle.js" charset="UTF-8"></script>
+  <script src="https://unpkg.com/swagger-ui-dist@5.11.0/swagger-ui-standalone-preset.js" charset="UTF-8"></script>
+  <script>
+    window.onload = function() {
+      // Determine relative spec URL so it works seamlessly on both GitHub Pages and custom subpaths
+      const specUrl = window.location.pathname.endsWith('/') 
+        ? window.location.pathname + 'openapi.json' 
+        : window.location.pathname.substring(0, window.location.pathname.lastIndexOf('/') + 1) + 'openapi.json';
+
+      const ui = SwaggerUIBundle({
+        url: specUrl,
+        dom_id: '#swagger-ui',
+        deepLinking: true,
+        presets: [
+          SwaggerUIBundle.presets.apis,
+          SwaggerUIStandalonePreset
+        ],
+        layout: "StandaloneLayout"
+      });
+      window.ui = ui;
+    };
+  </script>
+</body>
+</html>
