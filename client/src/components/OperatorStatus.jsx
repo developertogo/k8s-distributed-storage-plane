@@ -18,7 +18,7 @@ export default function OperatorStatus() {
           <div className="spinner-grow spinner-grow-sm text-success" role="status"></div>
           <h6 className="mb-0 fw-semibold text-white">Kubernetes Storage Operator Reconciliation Stream</h6>
         </div>
-        <span className="badge bg-dark border text-muted font-monospace" style={{ fontSize: '0.72rem' }}>
+        <span className="badge badge-dark-custom">
           CRD Watcher Active (5s Loop)
         </span>
       </div>

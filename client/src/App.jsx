@@ -30,17 +30,25 @@ export default function App() {
       <Navbar mode={mode} isBurstActive={telemetry?.isBurstActive || false} />
 
       <main className="container-fluid px-4 py-4 flex-grow-1">
-        <ClusterOverview
-          telemetry={telemetry}
-          cluster={telemetry?.cluster}
-          nodes={telemetry?.nodes}
-        />
+        <div id="cluster-topology">
+          <ClusterOverview
+            telemetry={telemetry}
+            cluster={telemetry?.cluster}
+            nodes={telemetry?.nodes}
+          />
+        </div>
 
-        <C3TelemetryChart telemetry={telemetry} />
+        <div id="telemetry-charts">
+          <C3TelemetryChart telemetry={telemetry} />
+        </div>
 
-        <VolumeManager mode={mode} />
+        <div id="volume-claims">
+          <VolumeManager mode={mode} />
+        </div>
 
-        <OperatorStatus />
+        <div id="operator-stream">
+          <OperatorStatus />
+        </div>
       </main>
 
       <footer className="border-top py-3 text-center text-muted" style={{ backgroundColor: 'var(--bg-card)', borderColor: 'var(--border-color)', fontSize: '0.8rem' }}>

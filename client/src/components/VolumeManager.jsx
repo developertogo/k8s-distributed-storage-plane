@@ -73,7 +73,7 @@ export default function VolumeManager({ mode }) {
                     {vol.id}
                   </small>
                 </td>
-                <td className="font-monospace fw-semibold">{vol.sizeGB} GB</td>
+                <td className="font-monospace fw-semibold text-light">{vol.sizeGB} GB</td>
                 <td>
                   <span className={`badge ${vol.storagePool === 'nvme-direct-pool' ? 'bg-primary' : 'bg-secondary'}`} style={{ fontSize: '0.72rem' }}>
                     {vol.storagePool}
