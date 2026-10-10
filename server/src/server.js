@@ -13,6 +13,7 @@ const kafkaService = require('./kafka/kafkaService');
 const clusterRoutes = require('./routes/clusterRoutes');
 const volumeRoutes = require('./routes/volumeRoutes');
 const telemetryRoutes = require('./routes/telemetryRoutes');
+const docsRoutes = require('./routes/docsRoutes');
 
 const app = express();
 const server = http.createServer(app);
@@ -21,7 +22,8 @@ const server = http.createServer(app);
 app.use(cors());
 app.use(express.json());
 
-// API Routes
+// API Routes & Documentation
+app.use('/api-docs', docsRoutes);
 app.use('/api/cluster', clusterRoutes);
 app.use('/api/volumes', volumeRoutes);
 app.use('/api/telemetry', telemetryRoutes);
@@ -90,6 +92,7 @@ async function bootstrap() {
 
     server.listen(config.port, () => {
       console.log(`[API Gateway] Storage Management Plane API running at http://0.0.0.0:${config.port}`);
+      console.log(`[Swagger UI] Interactive API Documentation live at http://0.0.0.0:${config.port}/api-docs`);
       console.log(`[Architecture] Ready for high-throughput AI workloads and CSI orchestration.`);
     });
   } catch (err) {

@@ -66,6 +66,17 @@ export default function Navbar({ mode, isBurstActive }) {
             <span>{reconciling ? "Reconciling..." : "🔄 Reconcile CRDs"}</span>
           </button>
 
+          <a
+            href={process.env.REACT_APP_API_URL ? `${process.env.REACT_APP_API_URL}/api-docs` : "http://localhost:5000/api-docs"}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="btn btn-sm btn-outline-info d-flex align-items-center gap-1 text-decoration-none"
+            title="Open Interactive Swagger / OpenAPI Specification"
+          >
+            <span>📜</span>
+            <span>Swagger API</span>
+          </a>
+
           <div className="border-start ps-3 ms-1" style={{ borderColor: 'var(--border-color)' }}>
             <span className="badge bg-secondary text-light">NVMe-oF / RoCEv2</span>
           </div>
@@ -120,6 +131,9 @@ export default function Navbar({ mode, isBurstActive }) {
               </a>
               <a href="#operator-stream" onClick={() => setShowDrawer(false)} className="list-group-item list-group-item-action bg-transparent text-light border-0 py-2 px-0 d-flex align-items-center gap-2">
                 <span>⚙️</span> Storage Operator Stream
+              </a>
+              <a href={process.env.REACT_APP_API_URL ? `${process.env.REACT_APP_API_URL}/api-docs` : "http://localhost:5000/api-docs"} target="_blank" rel="noopener noreferrer" onClick={() => setShowDrawer(false)} className="list-group-item list-group-item-action bg-transparent text-info border-0 py-2 px-0 d-flex align-items-center gap-2">
+                <span>📜</span> Interactive Swagger / OpenAPI
               </a>
             </div>
           </div>
