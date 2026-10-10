@@ -19,6 +19,21 @@ export default function Navbar({ mode, isBurstActive }) {
     }, 800);
   };
 
+  // Smart resolution for Swagger API Docs URL:
+  // On localhost/127.0.0.1, defaults to http://localhost:5000/api-docs (or REACT_APP_API_URL/api-docs)
+  // On GitHub Pages or custom domain, uses relative ./api-docs / https://developertogo.github.io/k8s-distributed-storage-plane/api-docs
+  const getSwaggerDocsUrl = () => {
+    if (typeof window !== 'undefined') {
+      const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+      if (isLocalhost) {
+        return process.env.REACT_APP_API_URL ? `${process.env.REACT_APP_API_URL}/api-docs` : 'http://localhost:5000/api-docs';
+      }
+      const baseUrl = process.env.PUBLIC_URL || '';
+      return `${baseUrl}/api-docs`;
+    }
+    return 'http://localhost:5000/api-docs';
+  };
+
   return (
     <>
       <nav className="navbar navbar-expand-lg border-bottom px-4 py-3" style={{ backgroundColor: 'var(--bg-card)', borderColor: 'var(--border-color)' }}>
@@ -67,7 +82,7 @@ export default function Navbar({ mode, isBurstActive }) {
           </button>
 
           <a
-            href={process.env.REACT_APP_API_URL ? `${process.env.REACT_APP_API_URL}/api-docs` : "http://localhost:5000/api-docs"}
+            href={getSwaggerDocsUrl()}
             target="_blank"
             rel="noopener noreferrer"
             className="btn btn-sm btn-outline-info d-flex align-items-center gap-1 text-decoration-none"
@@ -132,7 +147,7 @@ export default function Navbar({ mode, isBurstActive }) {
               <a href="#operator-stream" onClick={() => setShowDrawer(false)} className="list-group-item list-group-item-action bg-transparent text-light border-0 py-2 px-0 d-flex align-items-center gap-2">
                 <span>⚙️</span> Storage Operator Stream
               </a>
-              <a href={process.env.REACT_APP_API_URL ? `${process.env.REACT_APP_API_URL}/api-docs` : "http://localhost:5000/api-docs"} target="_blank" rel="noopener noreferrer" onClick={() => setShowDrawer(false)} className="list-group-item list-group-item-action bg-transparent text-info border-0 py-2 px-0 d-flex align-items-center gap-2">
+              <a href={getSwaggerDocsUrl()} target="_blank" rel="noopener noreferrer" onClick={() => setShowDrawer(false)} className="list-group-item list-group-item-action bg-transparent text-info border-0 py-2 px-0 d-flex align-items-center gap-2">
                 <span>📜</span> Interactive Swagger / OpenAPI
               </a>
             </div>
