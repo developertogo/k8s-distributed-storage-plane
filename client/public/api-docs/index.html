@@ -8,8 +8,59 @@
   <style>
     html { box-sizing: border-box; overflow: -moz-scrollbars-vertical; overflow-y: scroll; }
     *, *:before, *:after { box-sizing: inherit; }
-    body { margin:0; background: #0d1117; color: #c9d1d9; }
+    body { margin:0; background: #0d1117; color: #c9d1d9; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
     .topbar { display: none !important; }
+    
+    /* Notice Banner */
+    .docs-banner {
+      background: #161b22;
+      border-bottom: 1px solid #30363d;
+      padding: 12px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .docs-banner-text {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 0.88rem;
+      color: #8b949e;
+    }
+    .docs-banner-badge {
+      background: rgba(118, 185, 0, 0.15);
+      color: #76b900;
+      border: 1px solid #76b900;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-weight: 600;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .docs-back-btn {
+      background: #21262d;
+      color: #f0f6fc;
+      border: 1px solid #30363d;
+      padding: 6px 14px;
+      border-radius: 6px;
+      text-decoration: none;
+      font-size: 0.85rem;
+      font-weight: 500;
+      transition: all 0.15s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .docs-back-btn:hover {
+      background: #30363d;
+      color: #76b900;
+      border-color: #76b900;
+    }
+
+    /* Swagger UI Theme Tuning */
     .swagger-ui .info { margin: 25px 0; }
     .swagger-ui .info .title { font-size: 28px; color: #76b900 !important; }
     .swagger-ui .scheme-container { background: #161b22; box-shadow: none; border-bottom: 1px solid #30363d; }
@@ -19,12 +70,38 @@
   </style>
 </head>
 <body>
+  <!-- Static Preview Notification Header -->
+  <div class="docs-banner">
+    <div class="docs-banner-text">
+      <span class="docs-banner-badge" id="env-badge">OPENAPI SPEC</span>
+      <span id="env-message">
+        <strong>API Reference & Schema Explorer:</strong> Statically hosted on GitHub Pages for schema validation and review. To execute live I/O mutations, run the backend locally with <code>npm start</code> in <code>/server</code>.
+      </span>
+    </div>
+    <a href="../" class="docs-back-btn">
+      <span>←</span> Back to Dashboard
+    </a>
+  </div>
+
   <div id="swagger-ui"></div>
+
   <script src="https://unpkg.com/swagger-ui-dist@5.11.0/swagger-ui-bundle.js" charset="UTF-8"></script>
   <script src="https://unpkg.com/swagger-ui-dist@5.11.0/swagger-ui-standalone-preset.js" charset="UTF-8"></script>
   <script>
     window.onload = function() {
-      // Determine relative spec URL so it works seamlessly on both GitHub Pages and custom subpaths
+      const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+      
+      const badge = document.getElementById('env-badge');
+      const msg = document.getElementById('env-message');
+      if (isLocalhost) {
+        badge.textContent = 'LOCAL API SERVER';
+        badge.style.borderColor = '#38bdf8';
+        badge.style.color = '#38bdf8';
+        badge.style.background = 'rgba(56, 189, 248, 0.15)';
+        msg.innerHTML = '<strong>Live Local Environment:</strong> Connected to Node.js Express API Gateway on port 5000. Live requests can be tested directly.';
+      }
+
+      // Determine relative spec URL so it works seamlessly on GitHub Pages subpaths
       const specUrl = window.location.pathname.endsWith('/') 
         ? window.location.pathname + 'openapi.json' 
         : window.location.pathname.substring(0, window.location.pathname.lastIndexOf('/') + 1) + 'openapi.json';
@@ -37,7 +114,9 @@
           SwaggerUIBundle.presets.apis,
           SwaggerUIStandalonePreset
         ],
-        layout: "StandaloneLayout"
+        layout: "StandaloneLayout",
+        // Show "Try it out" by default locally, but disabled on static GitHub Pages to prevent confusing network errors
+        supportedSubmitMethods: isLocalhost ? ["get", "put", "post", "delete", "options", "head", "patch", "trace"] : []
       });
       window.ui = ui;
     };
