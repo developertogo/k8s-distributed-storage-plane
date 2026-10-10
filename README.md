@@ -22,6 +22,8 @@
 
 ## Live Management Dashboard
 
+> **Interactive Web Demo:** [https://developertogo.github.io/k8s-distributed-storage-plane/](https://developertogo.github.io/k8s-distributed-storage-plane/)
+
 ![Storage Plane Live Management Dashboard](assets/dashboard-demo.gif)
 
 *Figure: Real-time UI displaying dual-axis C3.js (`c3j`) throughput & P99 latency splines, distributed IOPS area chart, NVMe-oF node queue depths, dynamic volume claims, and live Kubernetes Storage Operator reconciliation stream.*
@@ -93,7 +95,6 @@ k8s-distributed-storage-plane/
 ├── docs/                              # Project architecture & system manuals
 │   ├── ARCHITECTURE.md                # Technical architecture & subsystem design
 │   └── DOCUMENTATION.md               # Complete system documentation & runbook
-├── HANDOFF.md                         # Engineering handoff & implementation spec
 ├── docker-compose.yml                 # Local multi-service stack (API, UI, Kafka, MongoDB)
 ├── quickstart.sh                      # Single-command bootstrap script
 ├── deploy.sh                          # K8s manifest deployment script
