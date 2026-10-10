@@ -166,17 +166,6 @@ k8s-distributed-storage-plane/
 
 ---
 
-### Git Commit Commands
-
-To inspect and commit the repository, execute:
-
-```bash
-git add .
-git commit -m "feat: complete k8s distributed storage management plane, operator, csi driver, and c3 dashboard"
-```
-
----
-
 ### Execution Commands
 
 #### 1. Instant Zero-Dependency UI Demo Mode (Client Simulator)
