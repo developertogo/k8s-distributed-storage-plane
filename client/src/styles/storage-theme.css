@@ -97,6 +97,16 @@ code, pre {
   margin-bottom: 4px;
 }
 
+/* Custom Badges */
+.badge-dark-custom {
+  background-color: var(--bg-surface) !important;
+  border: 1px solid var(--border-color) !important;
+  color: var(--text-muted) !important;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.3px;
+}
+
 /* C3 Chart Overrides for Dark Mode */
 .c3 text {
   fill: #8b949e !important;
@@ -112,24 +122,59 @@ code, pre {
   stroke: #1e2430 !important;
 }
 
+.c3-tooltip-container {
+  z-index: 1000 !important;
+}
+
 .c3-tooltip {
-  background-color: #1e2430 !important;
-  border: 1px solid #3b4759 !important;
-  color: #fff !important;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.5) !important;
+  background-color: #161b22 !important;
+  border: 1px solid #30363d !important;
+  color: #f0f6fc !important;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6) !important;
   border-radius: 6px;
+  overflow: hidden;
+}
+
+.c3-tooltip tr {
+  border: 1px solid #30363d !important;
 }
 
 .c3-tooltip th {
-  background-color: #151922 !important;
-  border-bottom: 1px solid #272f3d !important;
-  color: #f0f6fc !important;
+  background-color: #0d1117 !important;
+  border-bottom: 1px solid #30363d !important;
+  color: #58a6ff !important;
+  font-family: var(--font-mono) !important;
   font-size: 11px;
+  padding: 5px 10px !important;
+  text-align: left;
 }
 
 .c3-tooltip td {
+  background-color: #161b22 !important;
+  color: #f0f6fc !important;
+  font-family: var(--font-mono) !important;
   font-size: 11px;
-  border-bottom: 1px solid #272f3d !important;
+  padding: 4px 10px !important;
+  border-bottom: 1px solid #21262d !important;
+  border-left: none !important;
+}
+
+.c3-tooltip td.name {
+  color: #c9d1d9 !important;
+}
+
+.c3-tooltip td.name span {
+  display: inline-block;
+  width: 9px;
+  height: 9px;
+  margin-right: 6px;
+  border-radius: 2px;
+}
+
+.c3-tooltip td.value {
+  color: #58a6ff !important;
+  font-weight: 600;
+  text-align: right;
 }
 
 /* Terminal / Log Box */
@@ -185,6 +230,8 @@ code, pre {
   border-bottom: 1px solid var(--border-color);
   vertical-align: middle;
   font-size: 0.875rem;
+  color: #f0f6fc !important;
+  background-color: transparent !important;
 }
 
 /* Buttons */

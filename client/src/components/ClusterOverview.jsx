@@ -102,7 +102,7 @@ export default function ClusterOverview({ telemetry, cluster, nodes }) {
         <div className="d-flex justify-content-between align-items-center mb-3">
           <h6 className="mb-0 fw-semibold text-white d-flex align-items-center gap-2">
             <span>Cluster Topology & NVMe Fabric</span>
-            <span className="badge bg-dark border text-muted">3 Nodes Online</span>
+            <span className="badge badge-dark-custom">3 Nodes Online</span>
           </h6>
           <small className="text-muted font-monospace" style={{ fontSize: '0.75rem' }}>
             Interconnect: {currentCluster.fabric} · PCIe Gen5 x16

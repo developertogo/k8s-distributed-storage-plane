@@ -78,7 +78,16 @@ export default function C3TelemetryChart({ telemetry }) {
           x: { show: false },
           y: { show: true }
         },
-        point: { show: true, r: 2.5 }
+        point: { show: true, r: 2.5 },
+        tooltip: {
+          grouped: true,
+          format: {
+            value: (value, ratio, id) => {
+              if (id === 'P99 Latency (µs)') return `${value} µs`;
+              return `${value} GB/s`;
+            }
+          }
+        }
       });
     }
 
@@ -115,7 +124,13 @@ export default function C3TelemetryChart({ telemetry }) {
           }
         },
         grid: { y: { show: true } },
-        point: { show: false }
+        point: { show: false },
+        tooltip: {
+          grouped: true,
+          format: {
+            value: (value) => `${(value / 1000).toFixed(0)}k IOPS`
+          }
+        }
       });
     }
 
@@ -151,6 +166,11 @@ export default function C3TelemetryChart({ telemetry }) {
         },
         legend: {
           position: 'bottom'
+        },
+        tooltip: {
+          format: {
+            value: (value, ratio) => `${value} TB (${(ratio * 100).toFixed(1)}%)`
+          }
         }
       });
     }
@@ -176,7 +196,16 @@ export default function C3TelemetryChart({ telemetry }) {
           x: { type: 'category' },
           y: { label: { text: 'Magnitude', position: 'outer-middle' } }
         },
-        grid: { y: { show: true } }
+        grid: { y: { show: true } },
+        tooltip: {
+          grouped: true,
+          format: {
+            value: (value, ratio, id) => {
+              if (id === 'Queue Depth (cmds)') return `${value} cmds`;
+              return `${(value * 10).toFixed(1)} µs`;
+            }
+          }
+        }
       });
     }
 
@@ -243,7 +272,7 @@ export default function C3TelemetryChart({ telemetry }) {
                 Primary Y: Read/Write Bandwidth (GB/s) · Secondary Y2: P99 Storage Latency (µs)
               </small>
             </div>
-            <span className="badge bg-dark border text-success font-monospace" style={{ fontSize: '0.75rem' }}>
+            <span className="badge badge-dark-custom text-success">
               .flow() Dynamic
             </span>
           </div>
@@ -261,7 +290,7 @@ export default function C3TelemetryChart({ telemetry }) {
                 Direct NVMe vs Shared SSD
               </small>
             </div>
-            <span className="badge bg-dark border text-muted font-monospace" style={{ fontSize: '0.75rem' }}>
+            <span className="badge badge-dark-custom">
               Capacity
             </span>
           </div>
@@ -279,7 +308,7 @@ export default function C3TelemetryChart({ telemetry }) {
                 Ingestion Reads (Green) vs. Checkpoint Burst Writes (Red)
               </small>
             </div>
-            <span className="badge bg-dark border text-muted font-monospace" style={{ fontSize: '0.75rem' }}>
+            <span className="badge badge-dark-custom">
               Area-Spline
             </span>
           </div>
@@ -297,7 +326,7 @@ export default function C3TelemetryChart({ telemetry }) {
                 Hardware command queuing and controller response times per host
               </small>
             </div>
-            <span className="badge bg-dark border text-muted font-monospace" style={{ fontSize: '0.75rem' }}>
+            <span className="badge badge-dark-custom">
               Grouped Bar
             </span>
           </div>
