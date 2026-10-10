@@ -1,0 +1,444 @@
+openapi: 3.0.3
+info:
+  title: K8s Distributed Storage Management Plane API
+  description: >
+    Production-grade RESTful API Gateway for orchestrating Kubernetes storage operators,
+    Container Storage Interface (CSI) volume lifecycles, NVMe-oF attachments, and real-time Kafka telemetry.
+  version: 1.0.0
+  contact:
+    name: DGX Cloud Storage Architecture Team
+servers:
+  - url: http://localhost:5001
+    description: Local Standalone Development Gateway
+  - url: http://0.0.0.0:5001
+    description: Containerized Docker Cluster Gateway
+
+tags:
+  - name: Cluster
+    description: Kubernetes storage cluster state, node discovery, and reconciliation
+  - name: Volumes
+    description: CSI volume provisioning, RoCEv2 attachments, and live migration
+  - name: Telemetry
+    description: AI training workload simulation, IOPS metrics, and P99 latency feeds
+
+paths:
+  /health:
+    get:
+      summary: Service Health Check
+      description: Returns service liveness, uptime, and cluster version.
+      responses:
+        '200':
+          description: Service is healthy and operational.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HealthStatus'
+
+  /api/cluster/overview:
+    get:
+      tags:
+        - Cluster
+      summary: Get Cluster Overview & Storage Pools
+      description: Returns aggregate cluster capacity, active NVMe nodes, utilization ratios, and recent audit logs.
+      responses:
+        '200':
+          description: Cluster topology and audit history.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  cluster:
+                    $ref: '#/components/schemas/ClusterOverview'
+                  audits:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/AuditLog'
+
+  /api/cluster/nodes:
+    get:
+      tags:
+        - Cluster
+      summary: Discover & Probe Storage Nodes
+      description: Executes parallel health probes across all worker nodes to verify NVMe-oF link connectivity.
+      responses:
+        '200':
+          description: Real-time status of all cluster nodes.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  nodes:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/NodeStatus'
+
+  /api/cluster/reconcile:
+    post:
+      tags:
+        - Cluster
+      summary: Trigger Kubernetes Operator Reconciliation
+      description: Manually triggers the storage operator reconciliation loop across all storage pool CRDs.
+      responses:
+        '200':
+          description: Reconciliation loop completed successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  cluster:
+                    $ref: '#/components/schemas/ClusterOverview'
+
+  /api/volumes:
+    get:
+      tags:
+        - Volumes
+      summary: List All Storage Volume Claims
+      description: Returns all active CSI storage volume claims and their NVMe-oF target attachments.
+      responses:
+        '200':
+          description: Array of storage volume claims.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  volumes:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Volume'
+
+    post:
+      tags:
+        - Volumes
+      summary: Provision New Storage Volume
+      description: Initiates a multi-step waterfall workflow (quota check, CSI driver provision, NVMe-oF mapping, audit log).
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateVolumeRequest'
+      responses:
+        '201':
+          description: Volume provisioned and attached.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  volume:
+                    $ref: '#/components/schemas/Volume'
+        '400':
+          description: Validation error or quota exceeded.
+
+  /api/volumes/{id}:
+    get:
+      tags:
+        - Volumes
+      summary: Get Volume Details
+      description: Retrieves volume metadata, target node, effective bandwidth, and IOPS limit.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Volume details retrieved.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  volume:
+                    $ref: '#/components/schemas/Volume'
+        '404':
+          description: Volume not found.
+
+    delete:
+      tags:
+        - Volumes
+      summary: Teardown & Delete Volume
+      description: Invokes CSI DeleteVolume, unmounts NVMe namespace, and adjusts cluster quota allocation.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Volume detached and deleted.
+
+  /api/volumes/{id}/migrate:
+    post:
+      tags:
+        - Volumes
+      summary: Live-Migrate Volume to Destination Node
+      description: Enqueues an asynchronous migration workflow over RoCEv2 fabric without I/O corruption.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - destinationNode
+              properties:
+                destinationNode:
+                  type: string
+                  example: dgx-node-03
+      responses:
+        '200':
+          description: Migration queued or completed.
+
+  /api/telemetry/recent:
+    get:
+      tags:
+        - Telemetry
+      summary: Get Recent Telemetry Pulses
+      description: Retrieves time-series telemetry snapshots including IOPS, bandwidth, and P99 latency.
+      parameters:
+        - name: limit
+          in: query
+          required: false
+          schema:
+            type: integer
+            default: 30
+      responses:
+        '200':
+          description: Time-series telemetry snapshots.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  telemetry:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/TelemetrySnapshot'
+
+  /api/telemetry/simulate-burst:
+    post:
+      tags:
+        - Telemetry
+      summary: Trigger Synthetic AI Checkpoint Burst
+      description: Simulates synchronized multi-node PyTorch checkpoint write spikes (900K+ IOPS, 15+ GB/s).
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                duration:
+                  type: integer
+                  default: 8
+                  description: Number of 1-second pulse intervals for the burst.
+      responses:
+        '200':
+          description: Checkpoint burst triggered.
+
+components:
+  schemas:
+    HealthStatus:
+      type: object
+      properties:
+        status:
+          type: string
+          example: UP
+        service:
+          type: string
+          example: k8s-distributed-storage-plane
+        version:
+          type: string
+          example: 1.0.0
+        timestamp:
+          type: string
+          format: date-time
+
+    ClusterOverview:
+      type: object
+      properties:
+        name:
+          type: string
+          example: dgx-storage-cluster-prod
+        state:
+          type: string
+          example: Healthy
+        activeNodes:
+          type: integer
+          example: 3
+        networkFabric:
+          type: string
+          example: RoCE-v2
+        totalCapacityGB:
+          type: integer
+          example: 620000
+        allocatedCapacityGB:
+          type: integer
+          example: 245000
+        utilizationRatio:
+          type: number
+          format: float
+          example: 0.395
+        throughputGBps:
+          type: number
+          format: float
+          example: 48.6
+        p99LatencyUs:
+          type: number
+          format: float
+          example: 142.5
+        storagePools:
+          type: array
+          items:
+            $ref: '#/components/schemas/StoragePool'
+
+    StoragePool:
+      type: object
+      properties:
+        name:
+          type: string
+          example: nvme-direct-pool
+        type:
+          type: string
+          example: nvme-direct
+        capacityTB:
+          type: integer
+          example: 120
+        iopsTarget:
+          type: integer
+          example: 1500000
+        bandwidthTargetGBps:
+          type: number
+          example: 64.0
+
+    NodeStatus:
+      type: object
+      properties:
+        node:
+          type: string
+          example: dgx-node-01
+        healthy:
+          type: boolean
+          example: true
+        latencySample:
+          type: number
+          example: 112
+
+    Volume:
+      type: object
+      properties:
+        id:
+          type: string
+          example: svc-pytorch-checkpoint-01
+        name:
+          type: string
+          example: pytorch-checkpoint-vol
+        sizeGB:
+          type: integer
+          example: 2000
+        storagePool:
+          type: string
+          example: nvme-direct-pool
+        directStorageEnabled:
+          type: boolean
+          example: true
+        targetNode:
+          type: string
+          example: dgx-node-01
+        volumeHandle:
+          type: string
+          example: vol-dgx-nvme-9921
+        effectiveBandwidthGBps:
+          type: number
+          example: 18.4
+        iopsLimit:
+          type: integer
+          example: 450000
+        latencyTargetUs:
+          type: integer
+          example: 110
+
+    CreateVolumeRequest:
+      type: object
+      required:
+        - name
+        - sizeGB
+      properties:
+        name:
+          type: string
+          example: llama3-weights-cache
+        sizeGB:
+          type: integer
+          example: 1500
+        storagePool:
+          type: string
+          enum: [nvme-direct-pool, ssd-shared-pool]
+          default: nvme-direct-pool
+        directStorage:
+          type: boolean
+          default: true
+        targetNode:
+          type: string
+          enum: [dgx-node-01, dgx-node-02, dgx-node-03]
+          default: dgx-node-01
+
+    TelemetrySnapshot:
+      type: object
+      properties:
+        timestamp:
+          type: string
+          example: '12:30:15'
+        readIOPS:
+          type: integer
+          example: 685000
+        writeIOPS:
+          type: integer
+          example: 124000
+        totalIOPS:
+          type: integer
+          example: 809000
+        readGBps:
+          type: number
+          example: 41.8
+        writeGBps:
+          type: number
+          example: 7.5
+        totalThroughputGBps:
+          type: number
+          example: 49.3
+        p99LatencyUs:
+          type: number
+          example: 118
+
+    AuditLog:
+      type: object
+      properties:
+        actor:
+          type: string
+          example: csi-provisioner
+        action:
+          type: string
+          example: VOLUME_PROVISION
+        details:
+          type: string
+          example: Provisioned 2000GB volume on nvme-direct-pool
+        timestamp:
+          type: string
+          format: date-time

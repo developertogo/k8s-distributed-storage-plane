@@ -8,6 +8,7 @@ const dbManager = require('../src/db/mongoClient');
 const clusterRoutes = require('../src/routes/clusterRoutes');
 const volumeRoutes = require('../src/routes/volumeRoutes');
 const telemetryRoutes = require('../src/routes/telemetryRoutes');
+const docsRoutes = require('../src/routes/docsRoutes');
 
 describe('API Gateway REST Routes Tests', () => {
   let server;
@@ -24,6 +25,7 @@ describe('API Gateway REST Routes Tests', () => {
       res.json({ status: 'UP', service: 'k8s-distributed-storage-plane', version: '1.0.0' });
     });
 
+    app.use('/api-docs', docsRoutes);
     app.use('/api/cluster', clusterRoutes);
     app.use('/api/volumes', volumeRoutes);
     app.use('/api/telemetry', telemetryRoutes);
@@ -51,6 +53,23 @@ describe('API Gateway REST Routes Tests', () => {
     const body = await res.json();
     assert.equal(body.status, 'UP');
     assert.equal(body.service, 'k8s-distributed-storage-plane');
+  });
+
+  test('GET /api-docs returns HTML Swagger UI document', async () => {
+    const res = await fetch(`${baseUrl}/api-docs`);
+    assert.equal(res.status, 200);
+    const html = await res.text();
+    assert.ok(html.includes('SwaggerUIBundle'));
+    assert.ok(html.includes('swagger-ui'));
+  });
+
+  test('GET /api-docs/swagger.json returns valid OpenAPI 3.0 specification', async () => {
+    const res = await fetch(`${baseUrl}/api-docs/swagger.json`);
+    assert.equal(res.status, 200);
+    const spec = await res.json();
+    assert.equal(spec.openapi, '3.0.3');
+    assert.equal(spec.info.title, 'K8s Distributed Storage Management Plane API');
+    assert.ok(spec.paths['/api/volumes']);
   });
 
   test('GET /api/cluster/overview returns cluster state and audits', async () => {
