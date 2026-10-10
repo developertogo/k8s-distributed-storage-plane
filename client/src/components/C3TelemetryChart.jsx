@@ -139,6 +139,18 @@ export default function C3TelemetryChart({ telemetry }) {
         donut: {
           title: '620 TB Pool',
           width: 32
+        },
+        size: {
+          height: 235
+        },
+        padding: {
+          top: 0,
+          bottom: 5,
+          left: 10,
+          right: 10
+        },
+        legend: {
+          position: 'bottom'
         }
       });
     }
@@ -253,7 +265,7 @@ export default function C3TelemetryChart({ telemetry }) {
               Capacity
             </span>
           </div>
-          <div ref={chartPoolRef} style={{ minHeight: '260px' }}></div>
+          <div ref={chartPoolRef} style={{ height: '235px' }}></div>
         </div>
       </div>
 
