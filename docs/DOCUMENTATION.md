@@ -265,17 +265,6 @@ During your screen recording, follow this 4-step interactive flow to showcase re
 
 ## 9. Operational Runbook & Execution Guide
 
-### Git Commit Commands
-
-To inspect and commit the generated repository, execute:
-
-```bash
-git add .
-git commit -m "feat: complete k8s distributed storage management plane, operator, csi driver, and c3 dashboard"
-```
-
----
-
 ### Execution Commands
 
 #### 1. Instant Zero-Dependency UI Demo Mode (Client Simulator)
@@ -452,14 +441,4 @@ python3 scripts/test_scripts.py
 
 # 3. Client components & mock engine tests
 cd client && npm test -- --watchAll=false
-```
-
----
-
-### Git Commit Command
-
-To commit the new test suites to the repository:
-
-```bash
-git commit -m "test: add comprehensive unit tests for REST API, async workflows, CSI driver, DB models, and Python math"
 ```
